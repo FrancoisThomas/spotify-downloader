@@ -190,6 +190,8 @@ if __name__ == '__main__':
             spotify_tools.write_album(album_url=const.args.album)
         elif const.args.username:
             spotify_tools.write_user_playlist(username=const.args.username)
+        elif const.args.savedtracks:
+            spotify_tools.write_saved_tracks(username=const.args.savedtracks)
 
         # actually we don't necessarily need this, but yeah...
         # explicit is better than implicit!

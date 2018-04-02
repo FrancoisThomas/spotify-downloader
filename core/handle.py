@@ -102,6 +102,9 @@ def get_arguments(raw_args=None, to_group=True, to_merge=True):
         group.add_argument(
             '-u', '--username',
             help="load songs from user's playlist into <playlist_name>.txt")
+        group.add_argument(
+            '-st', '--savedtracks',
+            help="load songs from user's saved tracks into saved_tracks.txt")
 
     parser.add_argument(
         '-m', '--manual', default=config['manual'],

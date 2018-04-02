@@ -1,5 +1,6 @@
 import spotipy
 import spotipy.oauth2 as oauth2
+import spotipy.util as util
 import lyricwikia
 
 from core import internals
@@ -10,13 +11,20 @@ from titlecase import titlecase
 import pprint
 import sys
 
-
 def generate_token():
-    """ Generate the token. Please respect these credentials :) """
+    """ Generate the token. Replace with your credentials. """
     credentials = oauth2.SpotifyClientCredentials(
-        client_id='4fe3fecfe5334023a1472516cc99d805',
-        client_secret='0f02b7c483c04257984695007a4a8d5c')
+        client_id='client_id',
+        client_secret='client_secret')
     token = credentials.get_access_token()
+    return token
+
+def generate_user_token(username):
+    """ Generate the token for a user. Replace with your credentials. """
+    token = util.prompt_for_user_token(username, scope='user-library-read',
+        client_id='client_id',
+        client_secret='client_secret',
+        redirect_uri='http://localhost/')
     return token
 
 # token is mandatory when using Spotify's API
@@ -76,7 +84,18 @@ def generate_metadata(raw_song):
 
     log.debug(pprint.pformat(meta_tags))
     return meta_tags
+    
+def write_saved_tracks(username, text_file=None):
+    """ Fetch user saved tracks when using the -u option. Requires authentication. """
+    global spotify
+    token = generate_user_token(username)
+    spotify = spotipy.Spotify(auth=token)
 
+    tracks = spotify.current_user_saved_tracks()
+    
+    if not text_file:
+        text_file = u'{0}.txt'.format(slugify('Saved tracks', ok='-_()[]{}'))
+    return write_tracks(tracks, text_file)
 
 def write_user_playlist(username, text_file=None):
     links = get_playlists(username=username)
